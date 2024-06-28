@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟shadowDOM</title>
+</head>
+
+<body>
+
+    <div id="outer">外层节点</div>
+    <div class="test-inner">外层节点2-跟沙箱内部节点2同样的class名</div>
+    <script>
+
+        const appElement = document.createElement('div');
+        appElement.id = 'qiankun-xxx-xxx';
+
+        let shadow = appElement.attachShadow({ mode: 'closed' })
+        shadow.innerHTML = `<div id="inner">影子DOM里面的1内容</div>
+             <div class="test-inner">影子DOM里面的2内容-跟沙箱外部节点2同样的class名</div>
+            <style>div{color:red}.test-inner{color:blue;font-size:20px}</style>`
+
+        document.body.appendChild(appElement);
+
+
+
+        // const template = `<div id="qiankun-xxx-xxx">
+        //     <div id="inner">影子DOM里面的1内容</div>
+        //     <div class="test-inner">影子DOM里面的2内容-跟沙箱外部节点2同样的class名</div>
+        //     <style>div{color:red}.test-inner{color:blue;font-size:20px}</style>
+        //     </div>`;
+        // let container = document.createElement('div')
+        // container.innerHTML = template;
+
+        // const appElement = container.firstChild;    // appElement实际就是template的dom节点
+        // let oldContent = appElement.innerHTML;
+        // appElement.innerHTML = '';
+        // // 此时appElement就是一个<div id="qiankun-xxx-xxx"></div>的空div
+
+        // let shadow = appElement.attachShadow({ mode: 'closed' })
+        // // 生成一个影子DOM
+        // shadow.innerHTML = oldContent;
+        // // 把之前记录的节点内容放入影子DOM
+
+        // document.body.appendChild(appElement);
+
+    </script>
+</body>
+
+</html>

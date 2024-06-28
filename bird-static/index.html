@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原生应用</title>
+</head>
+
+<body>
+    <script>
+        //函数字面量创建add
+        // var add = function (a, b) {
+        //     return a + b;
+        // }
+        // var myObject = {
+        //     value: 0,
+        //     increment: function (inc) {
+        //         this.value += typeof inc === 'number' ? inc : 1;
+        //     }
+        // }
+
+        // myObject.increment();
+        // console.log(myObject.value); //1
+
+        // myObject.increment(2);
+        // console.log(myObject.value); //3
+
+        // //给myObject增加一个double方法
+        // myObject.double = function () {
+        //     var that = this;//解决方法
+
+        //     var helper = function () {
+        //         that.value = add(that.value, that.value);
+        //     }
+        //     helper();  //以函数的形式调用helper
+        // }
+
+        // //以方法的形式调用double
+        // myObject.double();
+        // console.log(myObject.value); //6
+
+
+        // this.x = 9; //相当于window.x=9
+        // console.log(this);
+
+        // var module = {
+        //     x: 81,
+        //     getX: function () {
+        //         return this.x;
+        //      }
+
+        // };
+
+        // console.log(module.getX());//81 作为对象方法调用
+
+        // var getX = module.getX;//把对象的方法赋值给一个变量
+        // console.log(getX());//9  this指向window，调用的是window的x
+
+        // var boundGetx = module.getX.bind(module);
+        // console.log(boundGetx());//81  通过bind修改运行时的this
+
+        // function foo(){
+        //     this.b = 100;
+        //     return this.a;
+        // }
+
+        // var func = foo.bind({a:11})
+        // var fn = new func();
+
+        // // func()直接调用，this会指向bind参数{a:1},return this.a就会返回1.
+        // // 执行了this.b=100其实是给{a:1}加了个b属性，最后是{a: 1, b: 100}只是不会作为返回值，因为指定了返回值。
+        
+        // // new调用的话，return除非是对象，不是对象的话会把this作为返回值，并且this会被初始化为默认的一个空对象，这个对象的原型是foo.prototye。
+        // console.log(fn,fn.__proto__===foo.prototype,func.prototype,func.__proto__);
+        // console.log(func());
+        // console.log(foo);
+    </script>
+    <script src="./sandox.js"></script>
+    <div id="static"></div>
+    <script>
+
+
+        function render(props, unmountNode) {
+            const app = document.getElementById('static');
+
+            const box = props.container ? props.container : app;
+            if (unmountNode !== undefined && box) {
+                box.innerHTML = unmountNode;
+                return;
+            }
+
+            const btn = document.createElement('button');
+            btn.innerText = '子应用-静态页面'
+            btn.addEventListener('click', function () {
+                props.setGlobalState({ name: 'test', age: 10 })
+            },)
+            box && box.appendChild(btn);
+        }
+
+        if (!window.__POWERED_BY_QIANKUN__) {
+            render({}, '独立静态页面')
+        }
+
+        // 最终到处接入协议即可
+        window['bird-static'] = {
+            bootstrap: async function bootstrap(props) {
+                console.log('static bootstrap', props);
+            },
+            mount: async function mount(props) {
+                console.log('=======static mount=========', props);
+                render(props);
+            },
+            unmount: async function unmount(props) {
+                console.log('static unmount', props);
+                render(props, null)
+            }
+        }
+    </script>
+</body>
+
+</html>
